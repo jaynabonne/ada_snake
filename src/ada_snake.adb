@@ -3,35 +3,28 @@ with Terminal_Interface.Curses;  use Terminal_Interface.Curses;
 with Ada.Real_Time; use Ada.Real_Time;
 with Snake;
 
-procedure Hello_Curses is
-   function Get_Message return String is
-      Message   : constant String := "Hello from AdaCurses!";
-      Full_Message : constant String := Message & " " & Natural'Image (Number_Of_Colors) & " " & Natural'Image (Number_Of_Color_Pairs);
-   begin
-      return Full_Message;
-   end Get_Message;
-
+procedure Ada_Snake is
    Visibility : Cursor_Visibility := Invisible;
    C : Key_Code;
    Snake_Body : Snake.Snake_Body;
-   Velocity: Snake.Velocity := (X => 1, Y => 0);
-   Initial_Snake_Col: Integer;
-   Initial_Snake_Line: Integer;
+   Velocity : Snake.Velocity := (X => 1, Y => 0);
+   Initial_Snake_Col : Integer;
+   Initial_Snake_Line : Integer;
 
-   procedure Add_Snake_Segment(Segment: Snake.Position) is
+   procedure Add_Snake_Segment (Segment : Snake.Position) is
    begin
       Snake_Body.Prepend (Segment);
       Add (Ch => Snake.Snake_Body_Char, Column => Column_Position (Segment.Col), Line => Line_Position (Segment.Line));
    end Add_Snake_Segment;
 
    procedure Remove_Snake_Segment is
-      Segment: constant Snake.Position := Snake.Snake_Body_Package.Element (Snake_Body.Last);
+      Segment : constant Snake.Position := Snake.Snake_Body_Package.Element (Snake_Body.Last);
    begin
       Snake_Body.Delete_Last;
       Add (Ch => ' ', Column => Column_Position (Segment.Col), Line => Line_Position (Segment.Line));
    end Remove_Snake_Segment;
 
-   -- helper for milliseconds
+   --  helper for milliseconds
    function MS (N : Natural) return Time_Span is
      (To_Time_Span (Duration (N) / 1000.0));
 
@@ -75,7 +68,7 @@ begin
    --  wait until user presses 'q'
    loop
       declare
-         Current_Head: constant Snake.Position := Snake.Snake_Body_Package.Element (Snake_Body.First);
+         Current_Head : constant Snake.Position := Snake.Snake_Body_Package.Element (Snake_Body.First);
          New_Line : Integer;
          New_Col : Integer;
          IntColumns : constant Integer := Integer (Columns);
@@ -83,24 +76,24 @@ begin
       begin
          C := Get_Keystroke (Standard_Window);
          exit when C = Character'Pos ('q');
-         if C = Character'Pos ('w') then 
+         if C = Character'Pos ('w') then
             Velocity := (X => 0, Y => -1);
-         elsif C = Character'Pos ('s') then 
+         elsif C = Character'Pos ('s') then
             Velocity := (X => 0, Y => 1);
-         elsif C = Character'Pos ('a') then 
+         elsif C = Character'Pos ('a') then
             Velocity := (X => -1, Y => 0);
-         elsif C = Character'Pos ('d') then 
+         elsif C = Character'Pos ('d') then
             Velocity := (X => 1, Y => 0);
          end if;
-         -- ... update & render one frame ...
-         New_Col := Integer (Current_Head.Col) + Velocity.X;
+         --  ... update & render one frame ...
+         New_Col := Current_Head.Col + Velocity.X;
          if New_Col < 0 then
             New_Col := New_Col + IntColumns;
          elsif New_Col >= IntColumns then
             New_Col := New_Col - IntColumns;
          end if;
 
-         New_Line := Integer (Current_Head.Line) + Velocity.Y;
+         New_Line := Current_Head.Line + Velocity.Y;
          if New_Line < 0 then
             New_Line := New_Line + IntLines;
          elsif New_Line >= IntLines then
@@ -116,4 +109,4 @@ begin
    end loop;
 
    End_Windows;
-end Hello_Curses;
+end Ada_Snake;

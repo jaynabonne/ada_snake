@@ -1,4 +1,4 @@
-name = "hello_curses"
+name = "ada_snake"
 description = "Test of ncurses"
 version = "0.1.0-dev"
 
@@ -9,7 +9,7 @@ licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 website = ""
 tags = []
 
-executables = ["hello_curses"]
+executables = ["ada_snake"]
 
 [[depends-on]]
 ncursesada = "^6.5.0"
